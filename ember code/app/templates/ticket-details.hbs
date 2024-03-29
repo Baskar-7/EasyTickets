@@ -1,0 +1,70 @@
+{{page-title "BookTickets"}}
+{{!-- <TicketDetails @movie={{this.model}}/> --}}
+<Header @normalHeader="true"/>
+<div class="tickets">
+<div class="ticket_details">
+    <h2 style="text-decoration: underline;">BOOKING SUMMARY</h2>
+    <table id="table">
+        <tbody>
+            <tr id="trow">
+                <td id="td">Movie Name</td>
+                <td id="amt">{{this.ticket_details.movie_name}}(<span id="certificate">{{this.ticket_details.movie_certificate}}</span>) - {{this.ticket_details.projection}}</td>
+            </tr>
+            <tr id="trow">
+                <td id="td">Theatre Name</td>
+                <td id="amt">{{this.ticket_details.theatre_name}},<span style="font-size: 12px;">{{this.ticket_details.located_at}}</span></td>
+            </tr>
+            <tr id="trow">
+                <td id="td">Screen Name</td>
+                <td id="amt">{{this.ticket_details.screen_name}}</td>
+            </tr>
+            <tr id="trow">
+                <td id="td">Language</td>
+                <td id="amt">{{this.ticket_details.language}}</td>
+            </tr>
+            <tr id="trow">
+                <td id="td">Tickets ({{this.ticket_details.ticket_count}})</td>
+                <td id="amt" class="seats">{{this.ticket_details.diamond_tickets.seats}}{{this.ticket_details.platinum_tickets.seats}}{{this.ticket_details.gold_tickets.seats}}{{this.ticket_details.silver_tickets.seats}}</td>
+            </tr>
+            <tr id="trow">
+                <td id="td">Time</td>
+                <td id="amt"> {{conditions "isTodayorTmrw" this.ticket_details.movie_time}} {{conditions "getDate" this.ticket_details.movie_time}} {{conditions "getMonth" this.ticket_details.movie_time}}, {{conditions "getLocalTime" this.ticket_details.movie_time}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2></h2>
+    <table id="table">
+        <tbody>
+            <tr id="trow">
+                <td id="td">Ticket Price</td>
+                <td id="amt">{{conditions "formatCurrency" this.ticket_details.total_price}}</td>
+            </tr>
+            <tr id="trow">
+                <td id="td"{{on "click" this.showConvenienceFeeDetails}}>Convenience fees <i class="fa-solid fa-caret-down rotate"></i></td>
+                <td id="amt">{{conditions "formatCurrency" (this.ConvenienceFees) }}</td>
+            </tr>
+            {{#if this.showConvenienceFees}}
+                <tr id="trow">
+                    <td id="td" style="position: relative;left: 20px;">Base Amount</td>
+                    <td id="amt" >{{conditions "formatCurrency" (this.base_amt) }}</td>
+                </tr>
+                <tr id="trow">
+                    <td id="td" style="position: relative;left: 20px;">Integrated GST (IGST) @ 18%</td>
+                    <td id="amt">{{conditions "formatCurrency" ( this.Gst)}}</td>
+                </tr>
+            {{/if}}
+            <tr id="trow">
+                <td  class="payable"><b>Amount Payable</b></td>
+                <td  class="amt" style="padding-left: 15em;"><b>{{conditions "formatCurrency" (this.pay)}}</b></td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="display: flex;flex-direction: row;justify-content: end;">
+        <button type="submit" class="confirm-btn-red" {{on "click" this.confirmTickets}}>Confirm Tickets</button>
+    </div>
+    {{!-- <div><h5>Show the m-ticket QR Code on your mobile to enter the cinema.</h5></div> --}}
+</div>
+</div>
+<Message-box @statusMessage={{this.statusMessage}} />
+<Loader @isloading={{this.isloading}} />
+{{outlet}}

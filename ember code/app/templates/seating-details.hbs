@@ -1,0 +1,138 @@
+{{page-title "SeatingDetails"}}
+
+<h1 class="page-title">{{this.details.theatre_name}}<span style="font-size: 10px;">, {{this.details.located_at}}</span></h1>
+<div class="seating_details scroll-bar" style="padding: 25px;">
+
+    <form id="update-form" style="padding: 60px;"  onsubmit={{this.updateDetails}}>
+        <h1 style="margin-top: 0px;">Screen Details</h1>
+        <div style="display: flex;flex-direction:column;">
+            <label for="screen_name">Screen Name </label>
+            <input id="screen_name" required autocomplete="off" placeholder="" type="text" value="{{this.details.screen_name}}" style="width: 300px;">
+        </div><br>
+
+        <div class="seating_inputs">
+            <div style="margin-left: 20px;">
+            <h4>Platinum</h4>
+            <div style="margin-left: 20px;">
+                <label for="platinum_seats">No. of Seats </label>
+                <input id="platinum_seats" type="text" readonly value="{{this.details.platinum.seats.length}}" />
+            </div>
+        </div>
+
+         <div style="margin-left: 20px;">
+            <h4>Diamond</h4>
+            <div style="margin-left: 20px;">
+                <label for="diamond_seats">No. of Seats </label>
+                <input id="diamond_seats" type="text" readonly value="{{this.details.diamond.seats.length}}"/>
+            </div>
+        </div>
+
+        <div style="margin-left: 20px;">
+            <h4>Gold</h4>
+            <div style="margin-left: 20px;">
+                <label for="gold_seats">No. of Seats </label>
+                <input id="gold_seats" type="text" disabled="true" readonly value="{{this.details.gold.seats.length}}"/>
+            </div>
+        </div>
+
+        <div style="margin-left: 20px;">
+            <h4>Silver</h4>
+            <div style="margin-left: 20px;">
+                <label for="silver_seats">No. of Seats </label>
+                <input id="silver_seats" type="text" readonly disabled="true" value="{{this.details.silver.seats.length}}"/>
+            </div>
+        </div>
+        </div>
+        <input id="submit-btn-form" style="display: none;" type="submit">
+    </form>
+
+    <div style="float:right;margin-top:45px">
+        <div style="margin: 2px;">
+            <span style="background-color: rgb(190, 193, 190);color:rgb(190, 193, 190);min-width:10px;border-radius:5px">empty</span>
+            <span>Empty</span>
+        </div>
+        <div style="margin: 2px;">
+             <span style="background-color: rgb(20, 184, 20);color:rgb(20, 184, 20);min-width:10px;border-radius:5px">empty</span>
+            <span>Selected Seats</span>
+        </div>
+    </div>
+
+
+        <div style="margin-top: 50px;">
+            <h4 style="margin-bottom: 5px;">Select Dimensions(Diamond)</h4>
+            <div style="margin: 10px;margin-left:0px;">
+                <input type="number" id="diamond_rows" placeholder="rows" style="width:90px;" value="{{this.details.diamond.rows}}"/>
+                <input type="number" id="diamond_cols" placeholder="cols" style="width:90px;" value="{{this.details.diamond.cols}}"/>
+                <input type="submit"  value="Apply Dimensions" {{on "click" (fn this.changeDimensions "diamond")}}/>
+            </div>
+             <hr>
+             <div class="diamond_seatings seating_layout">
+                <table id="diamond_layout" {{on "click" (fn this.toggleSeats "diamond")}}>
+                </table>
+            </div>
+        </div>
+   
+  
+    <div>
+        <h4 style="margin-bottom: 5px;">Select Dimensions(Platinum)</h4>
+        <div style="margin: 10px;margin-left:0px;">
+            <input type="number" id="platinum_rows" placeholder="rows" style="width:90px;" value="{{this.details.platinum.rows}}"/>
+            <input type="number" id="platinum_cols" placeholder="cols" style="width:90px;" value="{{this.details.platinum.cols}}"/>
+            <input type="submit" value="Apply Dimensions" {{on "click" (fn this.changeDimensions "platinum")}}/>
+        </div>
+        <hr>
+            <div class="platinum_seatings seating_layout">
+            <table id="platinum_layout" {{on "click" (fn this.toggleSeats "platinum")}}>
+            </table>
+        </div>
+    </div>
+
+   
+
+     
+
+     <div>
+            <h4 style="margin-bottom: 5px;">Select Dimensions(Gold)</h4>
+            <div style="margin: 10px;margin-left:0px;">
+                <input type="number" id="gold_rows" placeholder="rows" style="width:90px;" value="{{this.details.gold.rows}}"/>
+                <input type="number" id="gold_cols" placeholder="cols" style="width:90px;" value="{{this.details.gold.cols}}"/>
+                <input type="submit" placeholder="cols" value="Apply Dimensions" {{on "click" (fn this.changeDimensions "gold")}} />
+            </div>
+             <hr>
+             <div class="gold_seatings seating_layout">
+                <table id="gold_layout" {{on "click" (fn this.toggleSeats "gold")}}>
+                </table>
+            </div>
+    </div>
+
+     <div >
+            <h4 style="margin-bottom: 5px;">Select Dimensions(Silver)</h4>
+            <div style="margin: 10px;margin-left:0px;">
+                <input type="number" id="silver_rows" placeholder="rows" style="width:90px;" value="{{this.details.silver.rows}}"/>
+                <input type="number" id="silver_cols" placeholder="cols" style="width:90px;" value="{{this.details.silver.cols}}"/>
+                <input type="submit" placeholder="cols" value="Apply Dimensions" {{on "click" (fn this.changeDimensions "silver")}}/>
+            </div>
+            <hr>
+             <div class="silver_seatings seating_layout">
+                <table id="silver_layout" {{on "click" (fn this.toggleSeats "silver")}}>
+                </table>
+            </div>
+    </div>
+
+    <div class="btn-block">
+        <center>
+                <button class="confirm-btn-red" type="submit" {{on "click" this.closeWindow}}>✗ Close Window</button>
+                {{#if (conditions "==" "updateScreenDetails" this.details.type)}}
+                <button class="confirm-btn-red" style="padding:13px 20px;margin-left:20px" type="submit" {{on "click" this.deleteScreen}}><i class="fa-regular fa-trash-can"></i>  Delete Screen Details</button>
+                <button class="confirm-btn-green" type="submit" {{on "click" this.submitForm}}> &#10003;Update Details</button>
+                {{else}}
+                    <button class="confirm-btn-green" style="padding:10px 20px;" type="submit" {{on "click" this.submitForm}}> &#10003; Add Screen</button>
+                {{/if}}
+        </center>
+    </div>
+</div>
+
+<Loader @isloading={{this.isloading}} />
+<Message-box @statusMessage={{this.statusMessage}} />
+
+{{outlet}}

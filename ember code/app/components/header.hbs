@@ -1,0 +1,132 @@
+
+<div class="header">
+        <div class="logo search_bar">
+            <div>
+                <LinkTo @route="index" >
+                    <img src="/logo.png" style="width:20px;height:29px;">
+                    <span style="font-size: 30px;">𝔼𝕒𝕤𝕪𝕋𝕚𝕔𝕜𝕖𝕥𝕤</span>
+                </LinkTo>
+            </div>
+            {{#if (conditions "==" @search "true")}}
+                <div class="searchBox">
+                    <input type="text" id="movie_search_box" placeholder="Search Movies..." onkeyup={{this.searchShow}} autocomplete="off">
+                </div>
+            {{/if}}
+        </div>
+
+        <div class="addional-options" >
+            <div class="sign-options">
+            {{#if this.showProfileRoute}} 
+                <div style="float: right;"><LinkTo id="profileIcon" @route="profile.account-details"><img src="\userIcon.jpg"></LinkTo></div>
+            {{else}}
+                <button id="signin" type="button" {{on "click" (fn this.toggleContainer  "login-container" "slidetoTop")}}>Sign in</button>
+            {{/if}} 
+            </div>
+            
+            <div class="location" {{on "click" (fn this.toggleContainer "locations" "slidetoRight")}} {{on "click" this.clearSearch}}><span style="padding-right: 5px;">{{this.details.location}}</span><i class="fa-solid fa-location-dot" style="color: #f3f4f7;"></i></div>
+        </div>
+</div>
+
+<div class="login-container slidetoTop">
+    <div class="login" style="box-sizing: content-box;">
+        <div class="form">
+            <div class="close" style="right: 30px;" {{on "click" (fn this.toggleContainer "login-container" "slidetoTop")}}>&times;</div>
+            <div class="tab1">
+                <h2>Sign in</h2>
+                <div class="choice">
+                    <div {{on "click" this.googleAuth}}> 
+                        <img class="icon" src="/gsignin.jpg">
+                        <span>Continue with Google</span>
+                    </div> 
+                        <h4>OR</h4>
+                    <div {{on "click" (fn this.selectTab 0 1)}}>
+                        <img class="icon" src="/mailicon.png">
+                        <span>Continue with Mail</span>
+                    </div>
+                </div> 
+            </div>             
+
+            <form  onsubmit={{(fn this.sendOTP false 2)}}>  
+                <div class="tab2">
+                    <h2>Sign in</h2>
+                    <div class="close" style="left: 30px;" {{on "click" (fn this.selectTab true 2)}}>&#11178;</div>
+                    <div class="inputBox">
+                        <input id="mailInput" type="email" placeholder="Enter Your Mail" required="true" autocomplete="off" style="margin: 0;" >
+                        <i></i>
+                    </div>
+                        <input type="submit" value="Continue">
+                </div> 
+            </form>
+
+            <form onsubmit={{this.verifyOTP}}> 
+                <div class="tab3">
+                    <h4>Verify your Email Address<br><span style="font-size:13px;">Enter OTP send to {{this.details.mail}}</span></h4>
+                    <div class="close" style="left: 30px;" {{on "click" (fn this.selectTab true 3)}}>&#11178;</div>
+                    <div id="OTPContainer" class="input-field" onkeyup={{this.OTPContainer}}>
+                        <input type="number" name="otp1" pattern="\d" autocomplete="off" required/>
+                        <input type="number" name="otp2" pattern="\d" autocomplete="off" required disabled />
+                        <input type="number" name="otp3" pattern="\d" autocomplete="off" required disabled />
+                        <input type="number" name="otp4" pattern="\d" autocomplete="off" required disabled />
+                    </div>
+                    <h6 id="countdowntimer" {{on "click" this.ResendOTP}}></h6>
+                    <input type="submit" value="Verify">
+                </div>
+            </form>
+        </div> 
+    </div>
+</div>
+
+<div class="location-container">
+<div class="overlay-container locations slidetoRight" >
+   <div class="aside-container scroll-bar">
+     
+     <div style="display: flex;justify-content:space-between;align-items:center;">
+        <h3>Select City</h3>
+        <div style="font-size:30px" {{on "click" (fn this.toggleContainer "locations" "slidetoRight")}}>&times;</div>
+     </div>
+
+    <div class="searchBox">
+        <i class="fa-solid fa-magnifying-glass " style="color: #464748;padding:12px;"></i>
+        <input type="text" id="location" placeholder=" Search" onkeyup={{this.searchOtherCitiesLocation}} autocomplete="off"/>
+        <div class="parent" >
+             <i class="fa-solid fa-location-crosshairs" style="color: black;padding:10px;font-size:17px;" {{on "click" this.getCurrentLocation}}></i>
+            <div class="tooltip">Detect Current Location</div>
+        </div>
+    </div>
+        
+    <div class="popular-cities">
+        {{#each this.details.popular_cities as |city|}}
+            <div style={{ conditions "concat" (conditions "concat" "background-image: url(/"  city)  ".png);"}} {{on "click" (fn this.selectLocation city)}}>{{conditions "capitalize" city}}</div>
+        {{/each}}
+    </div>
+
+    
+        <div class="strike-through-name">
+            <hr>
+            {{#if this.details.popular_cities}}
+                <span>Other Cities</span>
+            {{else}}
+                <span>Cities</span>
+            {{/if}}
+            <hr>
+        </div>
+    
+
+    <div class="other-cities" >
+        {{#if this.details.other_cities}}
+        <ul>
+            {{#each this.details.other_cities as |city|}}
+                <li {{on "click" (fn this.selectLocation city.district)}}>{{city.district}}</li>
+            {{/each}}
+        </ul>
+        {{else}}
+            <h6 style="display:flex;justify-content:center;color:gray">No Results found..</h6>
+        {{/if}}
+    </div>
+   </div>
+</div>
+</div>
+<Message-box @statusMessage={{this.statusMessage}} />
+<Loader @isloading={{this.isloading}} />
+
+

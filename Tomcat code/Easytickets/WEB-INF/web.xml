@@ -1,0 +1,35 @@
+
+<web-app>  
+
+  	 <!-- <servlet> -->
+        <!-- <servlet-name>action</servlet-name> -->
+        <!-- <servlet-class>org.apache.struts.action.ActionServlet</servlet-class> -->
+        <!-- <init-param> -->
+            <!-- <param-name>config</param-name> -->
+            <!-- <param-value>/WEB-INF/struts-config.xml</param-value> -->
+        <!-- </init-param> -->
+	<!-- </servlet> -->
+	
+	<!-- <servlet-mapping> -->
+        <!-- <servlet-name>action</servlet-name> -->
+        <!-- <url-pattern>/api/*</url-pattern> -->
+    <!-- </servlet-mapping> -->
+	
+	<servlet>
+		<servlet-name>ServletAPI</servlet-name>
+		<servlet-class>servletApi.ServletAPIAction</servlet-class>
+	</servlet>
+  	
+	<servlet-mapping>
+		<servlet-name>ServletAPI</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+	
+	
+	 <session-config>
+        <!-- Session timeout in minutes -->
+        <session-timeout>10</session-timeout>
+    </session-config>
+
+  	  
+</web-app> 

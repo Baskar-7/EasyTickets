@@ -1,0 +1,130 @@
+{{page-title "ProfileDetails"}}
+
+    <div class="profile-details container scroll-bar">
+      <form class="Personal_details" onsubmit={{this.applyProfileChanges}}>
+      <h2 style="padding-left: 20px;color:gray;">Personal Details</h2>
+      <div class="edit-btn" {{on "click" (fn this.toggleEdit "Personal_details")}}><i class="fa-regular fa-pen-to-square"></i></div>
+      
+        <div class="inputBox-container">
+          <div class="inputBox">
+            <label for="fname">Name</label>
+            <input type="text" id="fname" autocomplete="off" disabled="true" placeholder="first" name="fname" value={{this.layoutDetails.fname}}/>
+          </div>
+          <div class="inputBox">
+            <label for="lname" style="visibility:hidden;">Last name</label>
+            <input type="text" id="lname" autocomplete="off" disabled="true" placeholder="last" name="lname" value={{this.layoutDetails.lname}}/>
+          </div>
+        </div>
+
+        <div class="inputBox-container">
+           <div class="inputBox">
+            <label for="dob">Birthday</label>
+            <input type="date" id="dob" disabled="true"  autocomplete="off" name="birthday" value={{this.layoutDetails.dob}}/>
+          </div>
+          <div class="inputBox">
+            <label for="mobile">Phone</label>
+            <input type="number" id="mobile" placeholder="eg.1234567890" disabled="true"  name="mobile" {{on "keyup" (fn this.checkMaxLength 10)}} value={{this.layoutDetails.mobile}} autocomplete="off"/>
+          </div>
+        </div>
+        
+         <div class="inputBox-container">
+          <div class="inputBox">
+            <label for="mail">Email</label>
+            <input type="text" id="mail" disabled="true" readonly autocomplete="off" name="mail" value={{this.layoutDetails.mail}}/>
+          </div> 
+          <div class="inputBox">
+            <label for="pincode">Pincode</label>
+            <input type="number" id="pincode" placeholder="eg.600001" disabled="true" autocomplete="off" onkeyup={{this.location}} name="pincode" value={{this.layoutDetails.pincode}}/>
+          </div>
+        </div>
+
+        <div class="inputBox-container">
+          <div class="inputBox">
+            <label for="city">City</label>
+            <input type="text" id="city" placeholder="eg.Chennai" name="city" disabled="true" readonly value={{this.layoutDetails.city}}  autocomplete="off" />
+          </div>
+          
+          <div class="inputBox">
+            <label for="state">State</label>
+            <input type="text" id="state" placeholder="eg.Tamil Nadu" name="state" disabled="true" readonly value={{this.layoutDetails.state}} autocomplete="off" />
+          </div>
+        </div>
+        
+        <div class="radio-container">
+          <label for="radio_1">Gender</label>
+            <div>
+              <input type="radio" disabled="true" value="male" id="radio_1" name="gender" checked={{(conditions "==" this.layoutDetails.gender 'male')}}/>
+              <label for="radio_1" class="radio">Male</label>
+              <input  type="radio" disabled="true" value="female" id="radio_2" name="gender" checked={{(conditions "==" this.layoutDetails.gender 'female')}}/>
+              <label for="radio_2" class="radio">Female</label>
+              <input  type="radio" disabled="true" value="others" id="radio_3" name="gender" checked={{(conditions "==" this.layoutDetails.gender 'others')}}/>
+              <label for="radio_3" class="radio">Others</label>
+            </div>
+        </div>
+        <div class="btn-block" style="display: none;">
+          <button class="confirm-btn-red" type="button" {{on "click" (fn this.toggleEdit "Personal_details")}}>Cancel</button>
+          <button class="confirm-btn-green" style="padding:10px 20px;" type="submit">Save</button>
+        </div>
+      </form>
+
+        {{#if (conditions "!=" this.layoutDetails.acc_type "User")}}
+        <div class="Business_Details ">
+          <h2 style="padding-left: 20px;color:gray;">Business Details</h2>
+          <div class="accordion scroll-bar">
+            {{#each this.layoutDetails.theatres as  |theatre index|}}
+              <div class="accordion-item">
+                  <div class="accordion-header" {{on "click" (fn this.toggleAccordion index)}}><div>{{theatre.theatre_name}},<span style="font-size: 10px;">{{theatre.located_at}}</span></div><span {{on "click" (fn this.deleteTheatre theatre.theatre_id)}}><i class="fa-regular fa-trash-can"></i></span></div>
+                  <div class="accordion-content">
+                    {{#each-in theatre.screens as  |screenId screen|}}
+                      <form class="{{(conditions "removeSpaces" screen.screen_name)}}">
+                        <div style="padding-left: 0px;">
+                          <input class="nameOfScreen" id={{screenId}} type="text" disabled="true" value={{screen.screen_name}} name={{screen.screen_id}} autocomplete="off">
+                          <div class="edit-btn" style="float:right;"><i class="fa-regular fa-pen-to-square" {{on "click" (fn this.editSeatingDetails "updateScreenDetails" screenId)}}></i></div>
+                        </div>
+                        <div>
+                            <label for="diamond_{{screenId}}">Diamond seats: </label>
+                            <input id="diamond_{{screenId}}" name="{{screen.screen_id}}_seat" type="number"  max="999" disabled="true" value={{screen.diamond_seats.length}} autocomplete="off" style="width:300px;">
+
+                            <label for="platinum_{{screenId}}">Platinum seats: </label>
+                            <input id="platinum_{{screenId}}" name="{{screen.screen_id}}_seat" type="number" min="0"  max="999" disabled="true" value={{screen.platinum_seats.length}} autocomplete="off"><br>
+
+                            <label for="gold_{{screenId}}">Gold seats: </label>
+                            <input id="gold_{{screenId}}" name="{{screen.screen_id}}_seat" type="number"  max="999" disabled="true" value={{screen.gold_seats.length}} autocomplete="off" style="width: 300px;">
+
+                            <label for="silver_{{screenId}}">Silver seats: </label>
+                            <input id="silver_{{screenId}}" name="{{screen.screen_id}}_seat" type="number"  max="999" disabled="true" value={{screen.silver_seats.length}} autocomplete="off">
+                        </div>
+                      </form>
+                      <hr>
+                    {{/each-in}}
+                    {{!-- <div id="add_screen" style="padding: 20px;"><i class="fa-solid fa-plus" style="color: #e6e6e6;"></i> Add Screen </div> --}}
+                    <div class="{{(conditions "removeSpaces" theatre.theatre_name)}}_add_screen new_element" style="padding: 20px;">
+                      <div class="addScreen_label" style="display: block;" {{on "click" (fn this.editSeatingDetails "newScreen" theatre.theatre_id)}}><i class="fa-solid fa-plus" style="color: #e6e6e6;"></i> Add Screen</div> 
+                    </div>
+                </div>
+              </div>
+            {{/each}}
+           <form class="accordion-item newThReq" style="padding: 0px;box-shadow:none" onsubmit={{(fn this.newTheatreRequest this.layoutDetails.userId)}}>
+                <div class="accordion-header" {{on "click" (fn this.toggleAccordion this.layoutDetails.theatres.length)}} {{on "click" (fn this.toggleEdit "newThReq")}} style="justify-content:flex-start;"><i class="fa-solid fa-plus" style="color: #bebbbb;margin-right: 5px;"></i> Add Theatre</div>
+                <div class="accordion-content">
+                  <div style="margin-top: 20px;">
+                    <label>Theatre Name<span>*</span> <input style="width: 150px;" type="text" disabled="true" name="theatre_name" id="theatre_name" required autocomplete="off"></label>
+                    <label>Located At<span>*</span> <input style="width: 150px;" type="text" disabled="true"  name="located_at" id="located_at" required autocomplete="off"></label>
+                    <label>Pincode<span>*</span> <input type="number" disabled="true" onkeyup={{this.location}} name="tpincode" id="tpincode" required autocomplete="off" style="width: 150px;"></label>
+                    <label>City: <input type="text" name="tcity" id="tcity"></label>
+                    <label>State: <input type="text" name="tstate" id="tstate"></label>
+                    </div>
+                </div>
+                <div class="btn-block" style="display: none;">
+                    <button class="confirm-btn-red" type="button" {{on "click" (fn this.toggleEdit "newThReq")}} {{on "click" (fn this.toggleAccordion this.layoutDetails.theatres.length)}}>Cancel</button>
+                    <button class="confirm-btn-green" type="submit">Save</button>
+                </div>
+            </form>
+         </div>
+         </div>
+        {{/if}}
+    </div>
+
+    <Loader @isloading={{this.isloading}} />
+   <Message-box @statusMessage={{this.statusMessage}} />
+{{outlet}}

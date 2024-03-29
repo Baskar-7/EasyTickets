@@ -1,0 +1,23 @@
+
+@import "./utils/header.scss";
+@import "./easytickets.scss";
+@import "./LoginPage.scss";
+@import "./utils//util.scss";
+@import "./utils/loader.scss";
+@import "./utils/profile.scss";
+
+body{
+    user-select: none;
+    cursor:pointer;
+    background-color: rgba(230, 251, 248, 0.7);
+
+    input{
+        background-color: rgb(200 239 238 / 0%);
+    }
+}
+
+a{
+    color: #fff;
+    text-decoration: none;
+}
+

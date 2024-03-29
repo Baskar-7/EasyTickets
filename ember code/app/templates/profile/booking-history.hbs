@@ -1,0 +1,184 @@
+{{page-title "BookingHistory"}}
+
+<div class="booking-history scroll-bar">
+  <div class="wrapper">
+    <div class="tabs">
+      
+      <div class="tab ">
+        <input type="radio" name="css-tabs" checked id="tab-6"  class="tab-switch">
+        <label for="tab-6" class="tab-label"><i class="fa-solid fa-circle-check" style="color: #6e7072;"></i>Booking History<div class="border-box"></div></label>
+          <div class="tab-content">
+            <div class="filters">
+              <input class="searchBox" type="text" placeholder="Search Movie" onkeyup={{this.search}} autocomplete="off">
+                <div class="dropdown" tabindex="0">
+                    <div class="select" {{on "click" this.toggleDropdown}}>
+                    <span id="selected_filter">Filter By: All Bookings</span>
+                    <i class="fa-solid fa-caret-down"></i>
+                    </div>
+                    <ul class="dropdown-menu scroll-bar">
+                        <li id="all" {{on "click" (fn this.filterBy "all")}}>All Bookings <i class="fa-solid fa-bars-staggered" style="color: #cdced0;"></i></li>
+                        <li id="week" {{on "click" (fn this.filterBy "week")}}>This Week  <i class="fa-solid fa-calendar-week" style="color: #cdced0;"></i></li>
+                        <li id="month" {{on "click" (fn this.filterBy "month")}}>This Month <i class="fa-regular fa-calendar" style="color: #cdced0;"></i></li>
+                        <li id="date-filter" {{on "click" (fn this.toggleClass "date-filter" "slide")}}>
+                          <div id="title" style="display: flex;justify-content: space-between;"><span>Pick Date</span><span> <i class="fa-regular fa-calendar-days" style="color: #cdced0;"></i></span></div>
+                          <div class="hid-box">
+                            <div>&#11178;</div>
+                            <div>From <input type="date" id="from" name="from" onchange={{(fn this.filterBy "date")}}> <br> To  <input type="date" id="to" name="to" onchange={{(fn this.filterBy "date")}}></div>
+                          </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <ul class="booking-list">
+              {{#if this.history_details.booking_history.histories.valid_tickets}}
+                {{#each-in this.history_details.booking_history.histories.valid_tickets as |index history|}}
+              <li>
+                <div class="booking-details"  style='background-color:#acbdf55c;'>
+                    <div class="movie-info">
+                        <div class="movie-poster" style={{ conditions "concat" (conditions "concat" "background-image: url(https://image.tmdb.org/t/p/original"  history.poster_path)  ");background-size:cover;background-position:center;"}}>
+                            <span class='banner-heading55' style='padding-left:0px;padding-bottom:10px;padding-top:10px;'>EasyTickets</span>
+                            <span class='banner-heading55' style='padding-left:0px;padding-bottom:10px;padding-top:10px;'>EasyTickets</span>
+                            <span class='banner-heading55' style='padding-left:0px;padding-bottom:10px;padding-top:10px;'>EasyTickets</span>
+                        </div>
+                      <div class="movie-details">
+                        <div class='ticket-info'>
+                          <p class='date'><span>{{conditions "dateSuffix" (conditions "getDate" history.show_startDate)}} {{conditions "getMonth" history.show_startDate}}</span><span class='timing'>{{conditions "getLocalTime" history.show_startDate}}, {{conditions "getDay" history.show_startDate}}</span><span>{{conditions "getYear" history.show_startDate}}</span></p>
+                        </div>
+                        
+                        <div style="display: flex;justify-content: space-between;">
+                            <table class='details'>
+                              <tbody>
+                                <tr><td colspan='2'><h1>{{history.movie_name}}({{history.certificate}})</h1></td></tr>
+                                <tr><td>BOOKING ID</td><td>{{history.booking_id}}</td></tr>
+                                <tr><td>Details </td><td>{{history.screen_name}}, {{history.language}} - {{history.projection_type}}</td></tr>
+                                <tr><td>Theatre </td><td>{{history.theatre_name}}, {{history.located_at}}</td></tr>
+                                <tr><td>Tickets({{history.seats.length}})</td><td>{{history.seats}}</td></tr>
+                                <tr><td>Price</td><td style='vertical-align: top;'> {{conditions "formatCurrency" history.price}}</td></tr>
+                              </tbody>
+                          </table>
+                          <div class='qr' style="display: flex;align-items:flex-end;">
+                            <img src='data:image/png;base64,{{history.encodedqr}}'  style='width:80px;height:80px;' alt='QR Code'>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              {{/each-in}}
+              {{/if}}
+            </ul>
+            <ul class="booking-list">
+              {{#if this.history_details.booking_history.histories.expired_tickets}}
+              <div class="headLine" style="width:250px;margin:5px 15px;display:flex;align-items:center;">Expired Tickets <span class="material-symbols-outlined scroll-icons" style="color: #80808052;font-size:20px;">  <i class="fa-solid fa-chevron-right"></i></span>
+              </div><br>
+              {{#each-in (conditions "reverseArray" this.history_details.booking_history.histories.expired_tickets) as |index history|}}
+              <li>
+                <div class="booking-details"  style='background-color:#acbdf55c;'>
+                    <div class="movie-info">
+                        <div class="movie-poster" style={{ conditions "concat" (conditions "concat" "background-image: url(https://image.tmdb.org/t/p/original"  history.poster_path)  ");background-size:cover;background-position:center;"}}>
+                            <span class='banner-heading55' style='padding-left:0px;padding-bottom:10px;padding-top:10px;'>EasyTickets</span>
+                            <span class='banner-heading55' style='padding-left:0px;padding-bottom:10px;padding-top:10px;'>EasyTickets</span>
+                            <span class='banner-heading55' style='padding-left:0px;padding-bottom:10px;padding-top:10px;'>EasyTickets</span>
+                        </div>
+                      <div class="movie-details">
+                        <div class='ticket-info'>
+                          <p class='date'><span>{{conditions "dateSuffix" (conditions "getDate" history.show_startDate)}} {{conditions "getMonth" history.show_startDate}}</span><span class='timing'>{{conditions "getLocalTime" history.show_startDate}}, {{conditions "getDay" history.show_startDate}}</span><span>{{conditions "getYear" history.show_startDate}}</span></p>
+                        </div>
+                        
+                        <div style="display: flex;justify-content: space-between;">
+                            <table class='details'>
+                              <tbody>
+                                <tr><td colspan='2'><h1>{{history.movie_name}}({{history.certificate}})</h1></td></tr>
+                                <tr><td>BOOKING ID</td><td>{{history.booking_id}}</td></tr>
+                                <tr><td>Details </td><td>{{history.screen_name}}, {{history.language}} - {{history.projection_type}}</td></tr>
+                                <tr><td>Theatre </td><td>{{history.theatre_name}}, {{history.located_at}}</td></tr>
+                                <tr><td>Tickets({{history.seats.length}})</td><td>{{history.seats}}</td></tr>
+                                <tr><td>Price</td><td style='vertical-align: top;'> {{conditions "formatCurrency" history.price}}</td></tr>
+                              </tbody>
+                          </table>
+                          <div class='qr' style="display: flex;align-items:flex-end;">
+                            <img src='data:image/png;base64,{{history.encodedqr}}'  style='width:80px;height:80px;' alt='QR Code'>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              {{/each-in}}
+            {{/if}}
+
+            {{#if (conditions "isEmpty" this.history_details.booking_history.histories.valid_tickets)}}
+                {{#if (conditions "isEmpty" this.history_details.booking_history.histories.expired_tickets)}}
+                    <div style="padding-top:20px;font-size:22px;color:rgb(139, 137, 137);">
+                      <center>No Bookings Available</center>
+                  </div>
+                {{/if}}
+           {{/if}}
+            </ul>
+        </div>
+      </div>
+
+      <div class="tab ">
+        <input type="radio" name="css-tabs" id="tab-7" class="tab-switch">
+        <label for="tab-7" class="tab-label"><i class="fa-solid fa-circle-check" style="color: #6e7072;"></i>Show History<div class="border-box"></div></label>
+        <div class="tab-content">
+          <div class="show_history">
+              <div class="accordion" style=" height: 200vh;overflow: visible;">
+                
+                  {{#each this.history_details.show_history.histories as  |history index|}}
+                    <div class="accordion-item">
+
+                        <div class="accordion-header" {{on "click" (fn this.toggleAccordion index)}}>
+                             {{#if history.backdrop_path}}
+                                <div  id="movie_poster" style="height: 40%;width:40%;">
+                                    <img  src='https://image.tmdb.org/t/p/original{{history.backdrop_path}}'> 
+                                </div>
+                              {{else}}
+                                <div class="movie" style="height: 230px;width: 230px;">
+                                  <div  id="movie_poster" style="height: 100%;"> 
+                                        <img  src='https://image.tmdb.org/t/p/original{{history.poster_path}}' > 
+                                  </div>
+                                </div>
+                              {{/if}}
+                           
+                            <div class="movie_details" style="width: 70%;padding: 10px;">
+                                <h2 style="margin: 5px;text-decoration:underline">{{history.title}}({{history.certificate}})</h2>
+                                  <div class="about">
+                                      <h4 style="margin-bottom: 5px;">About the movie</h4>
+                                      <div class="content">{{history.overview}}</div>
+                                  </div>
+                                <h4>Genres: {{history.genres}}</h4>
+                                <h4>Runtime: {{conditions "parseToTime" history.run_time}}</h4>
+                            </div>
+                        </div>
+
+                        <div class="accordion-content">
+                          {{#each history.theatres as  |theatre|}}
+                             <div class="history_details">
+                                <div class="theatre_details_container">
+                                  <div class="theatre_name" style="margin:auto;padding: 20px 0px;text-decoration:underline;color:#676eda;">{{theatre.theatre_name}},<span style="font-size:11px;">{{theatre.located_at}}</span></div>
+                                  <div class="show_details_container">
+                                    <Table @layout={{this.history_details.show_history.layout_details}} @searchBar={{false}} @data={{theatre.show_details}} @action={{(action "handleActions")}}/> 
+                                  </div>
+                                </div>
+                             </div>
+                            <hr>
+                          {{/each}}
+                      </div>
+                    </div>
+                  {{/each}}
+                   
+              </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<Message-box @statusMessage={{this.statusMessage}} />
+<Loader @isloading={{this.isloading}} />
+
+{{outlet}}

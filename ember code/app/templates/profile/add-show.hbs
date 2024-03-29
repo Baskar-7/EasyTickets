@@ -1,0 +1,197 @@
+{{page-title "AddShow"}}
+
+{{#if (conditions "isEmptyObject" this.addShow.theatreDetails.screens)}}
+  <div class="parent" style="align-content:center;display:flex;justify-content:space-around;margin-top:20%;flex-direction:column;align-items:center;">
+      <div style="padding:10px;border: 1px solid rgba(230, 251, 248, 0.7);background-color:rgb(144 233 220 / 42%);border-radius:5px;">
+        <LinkTo @route="profile.account-details" style="color: #000000bd;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Update theatre details</LinkTo>
+      </div>
+      <div class="information" style="left: 50%;color:gray;padding:10px;"><i class="fa-solid fa-circle-info"></i> add or update theatre detials(under the profile details as Buisness details) to add shows</div>
+  </div>
+{{else}}
+<div class="add-show container">
+   <div class="inputBox-container" style="justify-content: space-around;">
+        <div class="inputBox">
+          <label>Search Movie</label>
+          <input type="text" id="title" autocomplete="off" placeholder="eg. Anbe Sivam" name="fname" {{on "keyup" this.SearchMovie}}/>
+        </div>
+        
+        <div class="movie-list dropdown" tabindex="0" {{on "focusout" (fn this.toggleDropdown "movie-list")}} style="margin-top: 15px;">
+          <div class="select" {{on "click" (fn this.toggleDropdown "movie-list")}}>
+            <span class="text-wrap">Select Movie</span>
+            <i class="fa-solid fa-caret-down"></i>
+          </div>
+          <ul class="dropdown-menu scroll-bar">
+            {{#each-in this.addShow.list as |movieId movie|}}
+                {{#if movie.title}}
+                    <li id={{movie.id}} {{on "click" this.selectMovie }}>{{movie.title}} ({{look-up-data "getLang" movie.original_language}}) - {{conditions "getYear" movie.release_date}}</li>
+                {{/if}}
+            {{/each-in}}
+          </ul>
+       </div>
+  </div>
+
+{{#if this.addShow.details}}
+    <form>
+      <div class="container">
+        <div class="movie-details slide1">
+
+          <div>
+              <img  class="movie" src='https://image.tmdb.org/t/p/original{{this.addShow.details.poster_path}}'>
+              <button class="confirm-btn-red" type="submit" {{on "click" (fn this.slide "slide2")}}>Continue</button>
+          </div>
+
+         <div class="Info">
+           <h2>{{this.addShow.details.title}}</h2>
+           <div>
+            <span>
+              <p><b>Genre:</b> {{this.addShow.details.genres}}</p>
+
+              {{#if this.addShow.details.certification}}
+                <p><b>Certification:</b> {{this.addShow.details.certification}}</p>
+              {{/if}}
+
+              {{#if this.addShow.details.vote_average}}
+                <p><b>Rating:</b> {{this.addShow.details.vote_average}}</p>
+              {{/if}}
+
+               {{#if this.addShow.details.languages}}
+                <p><b>Languages:</b> {{this.addShow.details.languages}}</p>
+              {{/if}}
+              {{#if this.addShow.details.release_date}}
+              <p><b>Release Date:</b> {{this.addShow.details.release_date}}</p>
+              {{/if}}
+
+            </span>
+            </div>
+
+            <h3 style="margin-bottom: 0;">Cast & Crew</h3>
+            <div class="cast-details scroll-bar">
+              
+                {{#each this.addShow.details.cast as |cast|}}
+                <div class="profile-pic">
+                  {{#if cast.profile_path}}
+                    <img src='https://image.tmdb.org/t/p/original{{cast.profile_path}}'>
+                  {{else}}
+                    <img src="\user.jpg">
+                  {{/if}}
+                  <h4>{{cast.name}}</h4>
+                  <h3>{{cast.known_for_department}}</h3>
+                </div>
+                {{/each}}
+            </div>
+         </div> 
+        </div>
+        
+        <div class="slide2 scroll-bar">
+          <h2><b>Movie: </b> {{this.addShow.details.title}}</h2>
+          <div class="table-container scroll-bar">
+              <table id="showTable">
+                <thead>
+                    <tr>
+                      <th>Theatre</th>
+                      <th>Screen</th>
+                      <th>Language</th>
+                      <th>Projection</th>
+                      <th>Show<span style="font-size: 9px;">(Start Time)</span></th>
+                      <th><span style="font-size: 9px;">(End Time)</span></th>
+                      <th>Silver</th>
+                      <th>Gold</th>
+                      <th>Platinum</th>
+                      <th>Diamond</th>
+                      <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.addShow.shows.showCount as |show|}}
+                        <tr class="show_{{show}}">
+                            <td>
+                              <div class="selectdiv">
+                                <select name="theatre_id" required="true" {{on "change" (fn this.selectOption show)}}>
+                                  <option value="">Select Theatre</option>
+                                  {{#each this.addShow.theatreDetails.theatres as |theatre|}}
+                                    <option value={{theatre.theatre_id}}>{{theatre.theatre_name}}</option>
+                                  {{/each}}
+                                </select>
+                                </div>
+                            </td>
+                            <td>
+                              <div class="selectdiv">
+                                <select name="screen_id" id="screen_{{show}}" disabled="true" required="true">
+                                  <option value="">Select Screen</option>
+                                </select>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="selectdiv">
+                                <select name="show_language" required="true">
+                                  {{#if this.addShow.details.languages}}
+                                  {{#each this.addShow.details.languages as |language|}}
+                                      <option value={{language}}>{{language}}</option>
+                                    {{/each}}
+                                  {{else}}
+                                    {{#each (look-up-data "getLang" "All") as |language|}}
+                                        <option value={{language}}>{{language}}</option>
+                                    {{/each}}
+                                  {{/if}}
+                                </select>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="selectdiv">
+                                <select name="show_projection" required="true">
+                                    <option value="2D">2D</option>
+                                    <option value="3D">3D</option>
+                                    <option value="iMax">IMAX</option>
+                                    <option value="D-Box">D-BOX</option>
+                                </select>
+                              </div>
+                            </td>
+                            <td>
+                                <input id="startTime_{{show}}" name="show_time&date" type="datetime-local" required="true" {{on "input" (fn this.getEndTime show)}} min="{{(conditions "getMinDate" this.addShow.details.release_date)}}">
+                            </td>
+                            <td>
+                              <div class="parent">
+                                <input id="endTime_{{show}}" readonly="true" name="show_endTime" type="time">
+                                <div class="tooltip" style="font-size: 9px;background-color:rgb(160, 160, 160);">(Show runtime + Interval(15mins) + break(20mins))</div>
+                              </div>
+                            </td>
+                            <td><input name="silver" type="number" value="60" required="true" ></td>
+                            <td><input name="gold" type="number" value="150" required="true"></td>
+                            <td><input name="platinum" type="number" value="220" required="true"></td>
+                            <td><input name="diamond" type="number" value="280" required="true"></td>
+
+                            <td style="text-align: center;">
+                              <button class="add-btn_{{show}} parent add-details" type="submit" style="background-color: white;cursor:pointer;border:none;" {{on "click" (fn this.addShowsDetails show)}}> 
+                                <span class="material-icons" style="font-size: 21px;color: green;">add_task</span>
+                                <div class="tooltip">Add Details</div>
+                              </button>
+
+                              <span class="delete-btn_{{show}}" {{on "click" (fn this.deleteShow show)}} style="font-size: 21px;">
+                                <i class="fa-regular fa-trash-can"></i>
+                              </span>
+                            </td>
+
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            <span class="add-more-shows"{{on "click" this.increaseShowCount}}>Add More Shows</span>
+          </div>
+          
+           <div class="btn-block" style="padding: 0px;display: flex;margin: 10px;">
+              <button class="confirm-btn-red" type="submit" {{on "click" (fn this.slide "slide1")}} style="padding:10px 20px;margin-bottom:0px;">&#11178; View Movie Details</button>
+              <button class="confirm-btn-green" type="submit"{{on "click" this.confirmShowBookings}}>&#10003; Confirm Show Bookings</button>
+            </div>
+        </div>
+      </div>
+    </form>
+    
+{{/if}}
+</div>
+{{/if}}
+
+<Message-box @statusMessage={{this.statusMessage}} />
+<Loader @isloading={{this.isloading}} />
+
+
+{{outlet}}

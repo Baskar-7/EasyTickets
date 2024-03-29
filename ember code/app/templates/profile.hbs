@@ -1,0 +1,90 @@
+{{page-title "Profile"}}
+
+  <div class="profile-container">
+    <div class="side-panel">
+      {{this.setActiveTab}}
+      <div class="app-logo">
+         <LinkTo @route="index" >
+            <img src="\logo.png" style="width:20px;height:29px;">
+            <span style="font-size: 30px;">𝔼𝕒𝕤𝕪𝕋𝕚𝕔𝕜𝕖𝕥𝕤</span>
+          </LinkTo>
+      </div>
+
+      <div class="profile">
+
+          <label class="-label" for="file">
+            <span class="fa-solid fa-camera" style="color:#eae2e2;"></span>
+            <span>Change Image</span>
+          </label>
+
+        <input id="file" type="file" accept=".jpg, .jpeg, .png" {{on "change" this.updateProfilePic}} />
+        {{#if this.userInfo.profile_pic}}
+          <img src= 'data:image/png;base64,{{this.userInfo.profile_pic}}'  alt="Profile Image" class="profile-image">
+        {{else}}
+          <img src="\profile.jpg"  alt="Profile Image" class="profile-image">
+        {{/if}}
+      </div>
+
+      <h2 class="profile-name">
+        {{#if this.userInfo.user_name}}
+          {{this.userInfo.user_name}}
+        {{else}}
+          Guest
+        {{/if}}
+      </h2>
+
+      <nav class="navigation">
+        <ul class="nav-links">
+            <li>
+              <LinkTo @route="index">
+               <i class="fa-solid fa-house"></i>  Home
+              </LinkTo>
+            </li>
+
+             <li {{on "click" this.setActiveTab }}>
+              <LinkTo @route="profile.account-details" class="{{if (conditions "==" this.activeTab "Profile") "active-tab"}}">
+                <i class="fa-solid fa-user"></i> Profile
+              </LinkTo>
+            </li>
+
+            {{#if (conditions "==" this.userInfo.acc_type "Admin")}}
+              <li {{on "click" this.setActiveTab}}>
+                <LinkTo @route="profile.manage-accounts" class="{{if (conditions "==" this.activeTab "Manage Accounts & Details") "active-tab"}}">
+                  <i class="fa-solid fa-bars-progress"></i> Manage Accounts & Details
+                </LinkTo>
+              </li>
+            {{/if}}
+             <li {{on "click" this.setActiveTab}}>
+              <LinkTo @route="profile.booking-history" class="{{if (conditions "==" this.activeTab "History") "active-tab"}}">
+                <i class="fa-sharp fa-solid fa-clock-rotate-left"></i> History
+              </LinkTo>
+            </li>
+            
+            {{#if (conditions "!=" this.userInfo.acc_type "User")}}
+            <li {{on "click" this.setActiveTab}}>
+              <LinkTo @route="profile.add-show" class="{{if (conditions "==" this.activeTab "Add Show") "active-tab"}}">
+                <i class="fa-solid fa-video"></i>  Add Show
+              </LinkTo>
+            </li>
+            {{/if}}
+            
+             <li>
+              <LinkTo @route="index" {{on "click" this.invalidateSession}}>
+                <i class="fa-solid fa-right-from-bracket"></i>  Logout
+              </LinkTo>
+            </li>           
+
+        </ul>
+      </nav>
+    </div>
+    
+    <div class="content">
+      <h1 class="page-title"><span>{{this.activeTab}}</span></h1>
+       <div class="content-area">
+          {{outlet}}
+       </div>
+    </div>
+  </div>
+
+<Loader @isloading={{this.isloading}} />
+<Message-box @statusMessage={{this.statusMessage}} />

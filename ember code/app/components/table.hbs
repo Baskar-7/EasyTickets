@@ -1,0 +1,133 @@
+
+
+<div class="Multi_Table">
+
+    <div class="filters">
+        {{#if this.layout.searchBar}}
+        <input type="text" class="search_box" name="searchbox" placeholder="search" {{on "keyup" this.search}} autocomplete="off">
+        {{/if}}
+        {{#if this.layout.filterList}}
+            <div class="dropdown" tabindex="0" {{on "focusout" this.toggleDropdown}} >
+                <div class="select" {{on "click" this.toggleDropdown}}>
+                <span class="{{this.layout.label}}_selected">Filter By</span>
+                <i class="fa-solid fa-caret-down"></i>
+                </div>
+                <ul class="dropdown-menu " {{on "click" this.filterBy}}>
+                    {{#each this.layout.filterList as |option|}}
+                        <li id={{option}}>{{option}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+    </div>
+
+<div class="table-container scroll-bar">
+          <table>
+            <thead>
+                <tr>
+                   {{#if (conditions "==" this.layout.actions.length "1")}}
+                        <th style="width:0px;"></th>
+                    {{else if (conditions ">" this.layout.actions.length "0")}}
+                        <th>Actions</th>
+                    {{/if}}
+                    {{#each this.layout.cols as |column|}}
+
+                        {{#if (conditions "==" this.layout.sortCol column)}}
+                            <th onclick={{action "sortBy" column}}>
+                                {{column}}
+                                {{#if this.layout.sortingOrder}}<i class="fa-solid fa-caret-up"></i>
+                                {{else}}<i class="fa-solid fa-caret-down"></i>{{/if}}
+                            </th>
+                        {{else}}
+                            {{#if (conditions "arrayContains" this.layout.sortArray column)}}
+                                <th onclick={{action "sortBy" column}}>
+                                    {{column}}
+                                </th>
+                            {{else}}
+                                <th>{{column}}</th>
+                            {{/if}}
+                        {{/if}}
+                                
+                    {{/each}}
+                </tr>
+            </thead>
+            <tbody>
+                {{#each this.data as |user|}} {{!-- {{on 'click' this.select}} --}}
+                    <tr onmouseover={{this.select}} onmouseout={{this.select}}>
+                        {{#if (conditions ">" this.layout.actions.length "0")}}
+                            <td style={{this.isVisible}} >
+                                <div style="display:inline-flex;">
+                                    {{#if (this.shouldDisplayAction "confirm" user)}}
+                                        <span class="parent">
+                                            <i {{on "click" (fn this.handleActions "confirm" user)}} class="fa-regular fa-circle-check correct"></i>
+                                            <div class="tooltip">confirm</div>
+                                        </span>
+                                    {{/if}}
+                                    {{#if (this.shouldDisplayAction "cancel" user)}} 
+                                        <span class="parent">
+                                            <i {{on "click" (fn this.handleActions "cancel" user)}} class="fa-regular fa-circle-xmark wrong"></i>
+                                            <div class="tooltip">cancel</div>
+                                        </span>
+                                    {{/if}}
+                                    {{#if (this.shouldDisplayAction "edit" user)}} 
+                                        <span class="parent" {{on "click" (fn this.handleActions "edit" user)}}>
+                                            <i class="fa-solid fa-pen"></i>
+                                            <div class="tooltip">edit</div>
+                                        </span>
+                                    {{/if}}
+                                    {{#if (this.shouldDisplayAction "delete" user)}} 
+                                        <span class="parent"  {{on "click" (fn this.handleActions "delete" user)}}>
+                                            <i class="fa-regular fa-trash-can"></i>
+                                            <div class="tooltip">delete</div>
+                                        </span>
+                                    {{/if}}
+                                    {{#if (this.shouldDisplayAction "upgrade" user)}}
+                                        <span class="parent" {{on "click" (fn this.handleActions "upgrade" user)}}>
+                                            <i class="fa-solid fa-circle-up"></i>
+                                            <div class="tooltip">upgrade</div>
+                                        </span>
+                                    {{/if}}
+                                    {{#if (this.shouldDisplayAction "degrade" user)}}
+                                        <span class="parent" {{on "click" (fn this.handleActions "degrade" user)}}>
+                                            <i class="fa-solid fa-circle-up fa-rotate-180"></i>
+                                            <div class="tooltip">degrade</div>
+                                        </span>
+                                    {{/if}}
+                                    {{#if (this.shouldDisplayAction "lock" user)}}
+                                        <span class="parent" {{on "click" (fn this.handleActions "lock" user)}}>
+                                            <i class="fa-solid fa-lock"></i>
+                                            <div class="tooltip">Close</div>
+                                        </span>
+                                    {{/if}}
+                                    {{#if (this.shouldDisplayAction "unlock" user)}}
+                                         <span class="parent" {{on "click" (fn this.handleActions "unlock" user)}}>
+                                            <i class="fa-solid fa-unlock"></i>
+                                            <div class="tooltip">Open</div>
+                                        </span>
+                                    {{/if}}
+                                     {{#if (this.shouldDisplayAction "view" user)}}
+                                        <span class="parent" {{on "click" (fn this.handleActions "view" user)}}>
+                                           <i class="fa-regular fa-eye"></i>
+                                            <div class="tooltip">View Details</div>
+                                        </span>
+                                    {{/if}}
+                                </div>
+                            </td>
+                        {{/if}}
+                        {{#each this.layout.cols as |column|}}
+                            <td>
+                                {{conditions "get" user column}}
+                            </td>
+                        {{/each}}
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+            {{#if (conditions "isEmpty" this.data)}}
+                <div  style="text-align:center;margin-top:100px;font-size:20px;">
+                No Records
+                </div>
+            {{/if}}
+        </div>
+</div>
+{{yield}}

@@ -1,0 +1,11 @@
+{{page-title "Trailer"}}
+
+
+<div class="trailer-container">
+    {{#each-in this.trailer_details.trailers as |index trailer|}}
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{trailer.id.videoId}}" frameborder="0" allowfullscreen></iframe>
+    {{/each-in}}
+</div>
+<Loader @isloading={{this.isloading}} />
+
+{{outlet}}

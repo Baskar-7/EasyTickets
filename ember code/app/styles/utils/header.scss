@@ -1,0 +1,181 @@
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    border: 1px solid rgb(0, 0, 0);
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 80px;
+    padding: 8px;
+    color: white;
+    background-image: linear-gradient(to right, #030303, #2b2f34) !important;
+
+    #movie_name{
+        font-size: 24px;
+        #certificate{
+            font-size: 8px;
+            border: 1px solid white;
+            padding: 0px 2px;
+            border-radius: 20px;
+        }
+    }
+
+    .logo.search_bar
+    {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .searchBox{
+            float: left;
+            margin-top: 5px;
+            margin-left: 10px;
+            align-items: center;
+        
+            input{
+                width: 500px;
+                margin-bottom: 0px;
+                height: 38px;
+                border-radius: 30px;
+                text-indent: 10px;
+            }
+        }
+    }
+
+    .addional-options{
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+
+        #signin{
+            color: white;
+            font-size: 14px;
+            float: right;
+            right: 10px;
+            margin-top: 5px;
+            padding: 5px 10px 5px 10px;
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+    
+        #profileIcon
+        {
+            float: right;
+            height: 40px;
+            width: 40px;
+            margin-right: 10px;
+            border: 1px solid #fff;
+            border-radius: 50px;
+    
+            img{
+                border-radius: 50px;
+            }
+        }
+
+        .location{
+            margin-right: 20px;
+            margin-top: 5px;
+            padding: 5px;
+            font-size: 15px;
+        }
+    }
+
+    #ticket-count{
+        border: 1px solid white;
+        width: 110px;
+        padding: 7px 10px 7px 12px;
+        border-radius: 5px;
+    }
+}
+
+
+.location-container{
+
+    .overlay-container{
+        z-index: 1;
+        .aside-container{
+            padding: 20px;
+            margin-top: 1px;
+            background: rgb(0 0 0 / 70%);
+            color: white;
+            width: 58vh;
+            float: right;
+            height: 100vh;
+            border-left:1px solid #fff;
+            overflow-y: auto; 
+
+            .searchBox
+            {
+                display: flex;
+                background-color: white;
+                border: 1px solid white;
+                border-radius: 30px;
+                align-items: center;
+
+                input{
+                    width: 40vh;
+                    height: 5vh;
+                    padding-left: 0px;
+                    outline: none;
+                    border: none;
+                    margin-bottom: 0px;
+            }
+            }
+
+            .popular-cities{
+                margin-top: 80px;
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                padding: 15px;
+            
+                div{
+                    width: 170px;
+                    height: 80px;
+                    margin-bottom: 10px;
+                    border-radius: 10px;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    text-align: start;
+                    padding: 25px;
+                    padding-left: 15px;
+                    padding-top: 80px;
+                    &:hover{
+                        box-shadow: 0 0 15px 0 #7675af;
+                    }
+                }
+            }
+
+            ul{
+                padding-left: 20px;
+                li{
+                    padding: 5px;
+                    font-size: 13px;
+                    color: gray;
+                    display: inline-block;
+                    width: calc(100% / 3 - 25px);
+                    margin: 5px 10px;
+
+                    &:hover{
+                        background-color: #fff;
+                        border-radius: 5px;
+                    }
+                }
+            }        
+        }
+    }
+}
+
+.location-container .overlay-container.activate{
+    animation: left .5s ease-in-out;
+    animation-fill-mode: forwards;
+}
+

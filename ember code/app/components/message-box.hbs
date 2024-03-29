@@ -1,0 +1,13 @@
+
+ {{#if (conditions "==" this.msgbox.show "true")}} 
+<div id="msg-box" class="message-box {{this.msgbox.status}}">
+        {{#if (conditions "==" this.msgbox.status "success")}} 
+            <i id="success" class="fa fa-check-circle success" aria-hidden="true"></i>
+        {{else if (conditions "==" this.msgbox.status "info")}}
+            <i class="fa fa-info-circle infor" aria-hidden="true"></i>
+        {{else}} 
+            <i class="fa fa-exclamation-triangle error" aria-hidden="true"></i>
+        {{/if}} 
+        <span class="message"> {{this.msgbox.message}}</span>
+</div>
+{{/if}} 

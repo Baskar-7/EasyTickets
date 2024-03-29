@@ -1,0 +1,133 @@
+{{page-title "Shows"}}
+
+<Header />
+<div class="movies show_container scroll-bar">
+    
+    <div class="movie_container">
+        <div class="movie_poster">
+            <div class="movie" style={{ conditions "concat" (conditions "concat" "background-image: url(https://image.tmdb.org/t/p/original"  this.show_details.movie_posterpath)  ");background-size:cover;background-position:center;"}}>
+                <span {{on "click" (fn this.watchTrailer this.show_details.movie_name)}}><i class="fa-solid fa-play"></i> Watch Trailer</span>
+            </div>
+            {{!-- <img  class="movie" src='https://image.tmdb.org/t/p/original{{this.show_details.movie_posterpath}}'> --}}
+            <div style="display: flex;flex-direction:column;text-align:center;">
+                <div><i class="fa-regular fa-clock"></i> {{conditions "parseToTime" this.show_details.movie_runtime}}</div>
+                <div style="color:rgb(18 16 16 / 64%);padding:10px 0px;"> 
+                   {{this.show_details.movie_certificate}} - {{this.show_details.movie_genres}}
+                </div>
+            </div>
+        </div>
+        <div class="movie_details">
+            <h1 style="margin-top: 0px;text-decoration:underline;">{{this.show_details.movie_name}}</h1>
+            
+            <div class="about">
+                <h4>About the movie</h4>
+                <div style=" word-wrap: break-word;">{{this.show_details.movie_overview}}</div>
+            </div>
+            
+            <h3 style="margin-bottom: 0;">Cast & Crew</h3>
+            <div class="cast-container" style="display: flex;align-items: center;width:100%;">
+                <span class="material-symbols-outlined scroll-icons" style="color: #80808052;font-size:30px;padding:5px;"  {{on "click" (fn this.scrollBy "bakward" "picScroll")}}><i class="fa-solid fa-chevron-left"></i></span>
+                <div class="cast-details scroll-bar" id="picScroll" style="width: 100%;">
+                {{#each this.show_details.movie_casts as |cast|}}
+                    <div class="profile-pic" >
+                        {{#if cast.profile_path}}
+                            <img src='https://image.tmdb.org/t/p/original{{cast.profile_path}}'>
+                        {{else}}
+                            <img src="\user.jpg">
+                        {{/if}}
+                        <h4>{{cast.cast_name}}</h4>
+                        <h3>{{cast.department}}</h3>
+                    </div>
+                    {{/each}}
+                </div>
+                <span class="material-symbols-outlined scroll-icons" style="color: #80808052;font-size:30px;padding:20px;" {{on "click" (fn this.scrollBy "forward" "picScroll")}}><i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="showDetails_container" >
+        <div class="showDetails_headder">
+
+            <div class="date-list">
+                <span class="material-symbols-outlined left-scroll-icon" style="color: #80808052;" {{on "click" (fn this.scrollBy "backward" "date")}}><i class="fa-solid fa-chevron-left"></i></span>
+                    <ul id="date" class="scroll-bar">
+                    {{#each this.show_details.show_dates as |date|}}
+                        <li class="{{if (conditions "==" date this.show_details.show_date) "selected"}}"  {{on "click" (fn this.filterShowDate date)}}>
+                            <span>{{conditions "getDay" date}}</span>
+                            <span>{{conditions "getDate" date}}</span>
+                            <span>{{conditions "getMonth" date}}</span>
+                        </li>
+                    {{/each}}
+                    </ul>
+                <span class="material-symbols-outlined right-scroll-icon" style="color: #80808052;" {{on "click" (fn this.scrollBy "forward" "date")}}><i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+           
+            <div>
+                {{!-- <div class="price-list dropdown" tabindex="0"  style="margin-top: 15px;">
+                    <div class="select" {{on "click" (fn this.toggleDropdown "price-list" "open")}} >
+                        <span class="text-wrap">Filter Price Range</span>
+                        <i class="fa-solid fa-caret-down"></i>
+                    </div>
+                    <ul class="dropdown-menu scroll-bar" {{on "mouseleave" (fn this.toggleDropdown "price-list")}}>
+                        {{#each-in this.addShow.list as |movieId movie|}}
+                            {{#if movie.title}}
+                                <li id={{movie.id}} {{on "click" this.selectMovie }}>{{movie.title}} ({{look-up-data "getLang" movie.original_language}}) - {{conditions "getYear" movie.release_date}}</li>
+                            {{/if}}
+                        {{/each-in}} 
+                        <li>
+                            <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+                            <label for="vehicle2"> I have a car</label>
+                        </li>
+                    </ul>
+                </div> --}}
+                <div class="showTime-list dropdown"  tabindex="0"  style="margin-top: 15px;background-color: rgba(230, 251, 248, 0.923);">
+                    <div class="select" {{on "click" (fn this.toggleDropdown "showTime-list" "open")}} >
+                        <span class="text-wrap">Filter Show Timings</span>
+                        <i class="fa-solid fa-caret-down"></i>
+                    </div>
+                    <ul class="dropdown-menu scroll-bar" {{on "mouseleave" (fn this.toggleDropdown "showTime-list" "close")}}>
+                        <li>
+                            <input type="checkbox" onchange={{this.filterTiming}} id="morning" value="00 - 11">
+                            <label for="morning">Morning <span>12:00 - 11:59 AM</span></label>
+                            
+                        </li>
+                        <li>
+                            <input type="checkbox"  onchange={{this.filterTiming}} id="afternoon" value="12 - 15">
+                            <label for="afternoon">Afternoon <span>12:00 - 03:59 PM</span></label>
+                        </li>
+                        <li>
+                            <input type="checkbox"  onchange={{this.filterTiming}} id="evening"  value="16 - 18">
+                            <label for="evening">Evening <span>04:00 - 06:59 PM</span></label>
+                        </li>
+                        <li>
+                            <input type="checkbox"  onchange={{this.filterTiming}} id="night" value="19 - 23">
+                            <label for="night">Night <span>07:00 - 11:59 PM</span></label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+    {{#if (conditions "isEmptyObject" this.show_details.shows)}}
+        <div style="padding-top:20px;font-size:22px;color:rgb(139, 137, 137);">
+          <center>No Shows Available</center>
+       </div>
+    {{else}}
+        {{#each this.show_details.shows as |show|}}
+        <div class="shows">
+            <div class="theatre_details" style="width:25%;padding:5px;word-wrap: break-word;">
+               <span style="color: #000000c7;margin-left:12px;">{{show.theatre_name}}</span>,<span style="font-size:9px;">{{show.theatre_locatedAt}}</span>
+            </div>
+            <div class="show_details" style="width: 75%;">
+                {{#each show.show_details as |details|}}
+                    <LinkTo @route="book-tickets" @model="{{details.show_history_id}}"><div>{{conditions "getLocalTime" details.show_date}}</div><div> {{details.language}} -  {{details.projection_type}}</div></LinkTo>
+                {{/each }}
+            </div>
+        </div>
+        <hr>
+        {{/each}}
+    {{/if}}
+    </div>
+</div>
+{{outlet}}

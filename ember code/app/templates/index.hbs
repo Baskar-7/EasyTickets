@@ -1,0 +1,148 @@
+{{page-title "Index"}}
+
+<Header @search="true" @action={{(action "handleActions")}}/> 
+<div class="listshow-icon bounce parent"  onclick={{action "requestForShow"}} onmouseover={{action "toggleBounceEffect"}}  onmouseout={{action "toggleBounceEffect"}}>
+      <img src="\Tent.png">
+      <div class="tooltip">List your show</div>
+</div>
+
+<div class="movies scroll-bar">
+      <div class="filter-box"  style="padding-bottom: 20px;">
+            <div class="language-list dropdown" style="margin-top: 15px;">
+                  <div class="select" {{on "click" (fn this.toggleDropdown "language-list")}} {{on "click" (fn this.toggleDropdown "genre-list" "close")}}>
+                        <span class="text-wrap">Langugage</span>
+                        <i class="fa-solid fa-caret-down"></i>
+                  </div>
+                  <ul class="dropdown-menu scroll-bar"  {{on "mouseleave" (fn this.toggleDropdown "language-list" "close")}}>
+                        <li><input type="text" placeholder="search language" onkeyup={{(fn this.searchFilters "languages")}}></li>
+                        {{#each this.layout_details.languages as |language|}}
+                              <li {{on "click" (fn this.selectFilter "language" language (look-up-data "getLang" "getKeyValue" language))}} >{{language}}</li>
+                        {{/each}}
+                  </ul>
+            </div>
+            <div class="genre-list dropdown" style="margin-top: 15px;">
+                  <div class="select" {{on "click" (fn this.toggleDropdown "genre-list")}} {{on "click" (fn this.toggleDropdown "language-list" "close")}}>
+                        <span class="text-wrap">Genre</span>
+                        <i class="fa-solid fa-caret-down"></i>
+                  </div>
+                  <ul class="dropdown-menu scroll-bar" {{on "mouseleave" (fn this.toggleDropdown "genre-list" "close")}}>
+                        <li><input type="text" placeholder="search Genres" onkeyup={{(fn this.searchFilters "genres")}}></li>
+                        {{#each this.layout_details.genres as |genre|}}
+                              <li {{on "click" (fn this.selectFilter "genre" genre (look-up-data "getGenres" genre))}} >{{genre}}</li>
+                        {{/each}}
+                  </ul>
+            </div>
+            {{#if (conditions "!=" this.layout_details.filterList.length 0)}}
+            <div class="filters">
+                  <div style="display: flex;">
+                        <div class="filter-icon"><span class="material-symbols-outlined" style="font-size: 17px;padding:2px;">tune</span>Filters</div>
+                        <div class="filter-list">
+                              {{#each this.layout_details.filterList as |filter|}}
+                                    <span {{on "click" (fn this.removeFilter filter.filterValue)}}>{{filter.filterValue}} &times;</span>
+                              {{/each}}
+                              <span {{on "click" this.removeAllFilters}}>Clear all &times;</span>
+                        </div>
+                  </div>
+            </div>
+            {{/if}}
+      </div>
+
+      {{#if this.layout_details.upcoming_movies}}
+      <div class="headLine" style="width:250px;margin:5px 15px;display:flex;align-items:center;">Upcoming Movies  <span class="material-symbols-outlined scroll-icons" style="color: #80808052;font-size:20px;"><i class="fa-solid fa-chevron-right"></i></span>
+      </div>
+      <div class="UM_container scroll-bar" style="width:96%;overflow:hidden;margin-left:15px;margin-bottom:50px"> 
+            <div class="upcoming-movies">
+                  {{#each this.layout_details.upcoming_movies as |upcoming_movie|}}
+                        {{#if upcoming_movie.backdrop_path}}
+                              <div class="posters" style={{ conditions "concat" (conditions "concat" "background-image: url(https://image.tmdb.org/t/p/original"  upcoming_movie.backdrop_path)  ");background-size:cover;background-position:center;border-radius: 5px;margin: 10px 10px;"}} onmouseenter={{this.resetProperties}} onmouseleave={{this.startScroller}}>
+                                    <div class="upmovie_details" style="width: 100%;height:100%;">
+                                          <table>
+                                                <tbody>
+                                                      <tr><td>{{upcoming_movie.original_title}} - </td>
+                                                      <td>{{upcoming_movie.release_date}}</td>
+                                                      <td>( {{look-up-data "getLang" upcoming_movie.original_language}} )</td></tr>
+                                                </tbody>
+                                          </table>
+                                    </div>
+                              </div>
+                        {{/if}}
+                  {{/each}}
+            </div>
+      </div>
+      {{/if}}
+       <div class="headLine" style="width:250px;margin:0px 0px 0px 20px;display:flex;align-items:center;">Now Streaming  <span class="material-symbols-outlined scroll-icons" style="color: #80808052;font-size:20px;"><i class="fa-solid fa-chevron-right"></i></span>
+       </div>
+       {{#each-in this.layout_details.show_details.shows as |show_id show|}}
+            <LinkTo @route="shows" @model={{show_id}} class="movie">
+                  <div  id="movie_poster">
+                         <img  src='https://image.tmdb.org/t/p/original{{show.poster_path}}'> 
+                  </div>
+
+                  <div class="details">
+                        <span>{{show.genre}}</span>
+                  </div> 
+            </LinkTo> 
+      {{/each-in}}
+      {{#if (conditions "isEmptyObject" this.layout_details.show_details.shows)}}
+            <div style="font-size:22px;color:rgb(139, 137, 137);padding-top:100px;">
+            <center>No Shows Available</center>
+            </div>
+      {{/if}}
+</div>  
+
+
+<Loader @isloading={{this.isloading}} />
+
+<div class="overlay-container host_request_container slidetoTop">
+      <form class="show-container" onsubmit={{this.addNewRequest}}>
+            <div class="close"  onclick={{action "requestForShow"}}>&times;</div>
+              <h2><center>Host Show </center><span style="font-size: 14px;">Fill the following details:-</span></h2>
+            <div class="scroll-bar" id="request-form">
+                  <div>
+                        <label for="Name">Name<span>*</span></label>
+                        <input type="text" id="Name" name="name" required autocomplete="off"> 
+                  </div>
+                  <div>
+                        <label for="mail">Mail<span>*</span></label>
+                        <div class="mail-container">
+                              <input type="email"  id="mail" name="mail" required autocomplete="off">
+                              <span id="get-otp-button" onclick={{this.sendOtp}}></span>
+                              <span class="verified-note">
+                                    Verified <i class="fa-solid fa-circle-check" id="check-icon"></i>
+                              </span>
+                        </div>
+                        <div class="otp-container">
+                          <label for="otp-box">One Time Password:   <input type="text" name="otp" id="otp-box" maxlength="4" style="width: 65px;border:1px solid #ccc;letter-spacing:3px;" {{on "keyup" this.verifyOtp }} placeholder="OTP"></label>
+                        </div>
+                  </div>
+                  <div>
+                        <label for="mobile">Phone<span>*</span></label>
+                        <input type="number" id="mobile" maxlength="10"  {{on "keyup" (fn this.checkMaxLength 10)}} name="mobile" required autocomplete="off">
+                  </div>
+                  <div>
+                        <label for="theatre_name">Theatre Name<span>*</span></label>
+                        <input type="text" id="theatre_name"autocomplete="off" name="theatre_name" required>
+                  </div>
+                  <div>
+                        <label for="pincode">Located at<span>*</span></label>
+                        <input type="text" id="location" autocomplete="off" name="located_at" required/>
+                  </div>
+                  <div>
+                        <label for="pincode">Pincode<span>*</span></label>
+                        <input type="number" id="pincode" maxlength="6" autocomplete="off" onkeyup={{this.getLocation}} name="pincode" required/>
+                  </div>
+                  <div >
+                        <label>City</label>
+                        <input type="text" name="city" id="city" disabled  autocomplete="off" required/>
+                  </div>
+                  <div >
+                        <label>State</label>
+                        <input type="text" name="state" id="state" disabled readonly autocomplete="off" required/>
+                  </div>
+            </div>
+            <button type="submit" class="confirm-btn-red">Submit</button>
+      </form>
+</div>
+
+<Message-box @statusMessage={{this.statusMessage}} />
+{{outlet}}

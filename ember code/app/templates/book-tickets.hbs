@@ -1,0 +1,51 @@
+{{page-title "BookTickets"}}
+<div class="book-tickets">
+    {{!-- Headder --}}
+    <div class="header">
+        {{!-- <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;"> --}}
+            <div>
+                <div id="movie_name">{{this.show_details.movie_name}}<span id="certificate">{{this.show_details.movie_certificate}}</span></div>
+                <div id="theater-time" style="font-size:12px;margin-top:10px;">{{this.show_details.theatre_name}},<span style="font-size: 8px;">{{this.show_details.located_at}}</span>  / {{conditions "isTodayorTmrw" this.show_details.movie_time}} {{conditions "getDate" this.show_details.movie_time}} {{conditions "getMonth" this.show_details.movie_time}}, {{conditions "getLocalTime" this.show_details.movie_time}}</div>
+            </div>
+            <div>
+                <LinkTo @route="index">
+                    <img src="/logo.png" style="width:20px;height:29px;">
+                    <span style="font-size: 30px;">𝔼𝕒𝕤𝕪𝕋𝕚𝕔𝕜𝕖𝕥𝕤</span>
+                </LinkTo>
+            </div>
+            <div id="ticket-count">{{this.show_details.ticket_count}} Tickets <span style="padding-left:5px;" {{on "click" this.clearAll}}> &times;</span></div> 
+        {{!-- </div> --}}
+    </div> 
+
+
+    <div class="seating_layout scroll-bar">
+        <div>
+            <table id="diamond_layout" {{on "click" (fn this.selectSeats "diamond")}}></table>
+        </div>
+        <div>
+            <table id="platinum_layout" {{on "click" (fn this.selectSeats "platinum")}}></table>
+        </div>
+        <div>
+            <table id="gold_layout" {{on "click" (fn this.selectSeats "gold")}}></table>
+        </div>
+        <div>
+            <table id="silver_layout" {{on "click" (fn this.selectSeats "silver")}}>
+            </table>
+        </div>
+        {{!-- <hr id="screen" style="margin-bottom:80px;"> --}}
+        <img  id="screen" style="margin-bottom:100px;" src="/screenIcon.jpg">
+        
+        {{#if this.show_details.ticket_count}}
+            <button id="submitbtn" type="submit" {{on "click" this.confirmTickets}}>Book Tickets ({{conditions "formatCurrency" this.show_details.total_price}})</button>
+        {{/if}}
+    </div>
+    
+    <div class="booktickets-footer">
+        <span id="Sold" style="border-color: rgb(148, 145, 145);background-color: rgb(206, 203, 203);"></span> Sold
+        <span id="Available" style="border-color: green;"></span>Available
+        <span id="Selected" style="border-color: green;background-color: green;"></span> Selected
+    </div>
+</div>
+<Loader @isloading={{this.isloading}} />
+<Message-box @statusMessage={{this.statusMessage}} />
+{{outlet}}
