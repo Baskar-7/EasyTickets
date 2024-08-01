@@ -6,7 +6,7 @@
     <div class="movie_container">
         <div class="movie_poster">
             <div class="movie" style={{ conditions "concat" (conditions "concat" "background-image: url(https://image.tmdb.org/t/p/original"  this.show_details.movie_posterpath)  ");background-size:cover;background-position:center;"}}>
-                <span {{on "click" (fn this.watchTrailer this.show_details.movie_name)}}><i class="fa-solid fa-play"></i> Watch Trailer</span>
+                <span {{on "click" (fn this.watchTrailer this.show_details.movie_name)}} style="    background-color: #000000b3;padding: 10px;"><i class="fa-solid fa-play"></i> Watch Trailer</span>
             </div>
             {{!-- <img  class="movie" src='https://image.tmdb.org/t/p/original{{this.show_details.movie_posterpath}}'> --}}
             <div style="display: flex;flex-direction:column;text-align:center;">
